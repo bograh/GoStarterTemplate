@@ -68,7 +68,10 @@ func (sm *SessionManager) GetSession(ctx context.Context, sessionID string) (*mo
 	}
 
 	if time.Now().After(session.ExpiresAt) {
-		sm.DeleteSession(ctx, sessionID)
+		err := sm.DeleteSession(ctx, sessionID)
+		if err != nil {
+			return nil, err
+		}
 		return nil, fmt.Errorf("session expired")
 	}
 

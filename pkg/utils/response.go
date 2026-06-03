@@ -13,14 +13,20 @@ type ErrorResponseBody struct {
 func JSONResponse(w http.ResponseWriter, data any, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(data)
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil {
+		return
+	}
 }
 
 func ErrorResponse(w http.ResponseWriter, message string, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(ErrorResponseBody{
+	err := json.NewEncoder(w).Encode(ErrorResponseBody{
 		Error:   http.StatusText(statusCode),
 		Message: message,
 	})
+	if err != nil {
+		return
+	}
 }
